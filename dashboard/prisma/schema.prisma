@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum DonationStatus {
+  ACCEPTED      
+  TOXIC         
+  JUDI_ONLINE   
+}
+
+model User {
+  id                String     @id @default(uuid())
+  username          String     @unique
+  password          String
+  name              String
+  createdAt         DateTime   @default(now())
+
+  donationsReceived Donation[] @relation("StreamerDonations")
+  donationsSent     Donation[] @relation("SenderDonations")
+}
+
+model Donation {
+  id             String         @id @default(uuid())
+  amount         Int
+  senderName     String
+  senderId       String?        
+  sender         User?          @relation("SenderDonations", fields: [senderId], references: [id])
+  streamerId     String
+  streamer       User           @relation("StreamerDonations", fields: [streamerId], references: [id])
+  message        String
+  
+  status         DonationStatus @default(ACCEPTED) 
+  
+  toxicScore     Float?         
+  judiScore      Float?         
+  
+  createdAt      DateTime       @default(now())
+}
