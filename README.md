@@ -14,16 +14,16 @@ The working repository contains raw scraped live chat: gambling promotion writte
 
 Concretely, the following were removed from every notebook:
 
-| Removed | Why |
-| :-- | :-- |
-| Raw message rows, `.head()` previews, rendered data tables | Republishes user content verbatim |
-| Confusion-matrix breakdowns listing individual messages | Republishes the text *and* attaches a public verdict to it |
-| Word and n-gram frequency listings | These are user vocabulary, including slurs |
-| Charts plotting top words or top usernames as labels | Same content, rendered as pixels |
-| Gambling site names | Promotional material for illegal services |
-| YouTube handles | Personal data, and no analytical value for text classification |
-| Styled-Unicode sequences | Filter-evasion glyphs used by spammers |
-| Local filesystem paths in warning traces | Leaks the author's machine layout |
+| Removed                                                    | Why                                                            |
+| :--------------------------------------------------------- | :------------------------------------------------------------- |
+| Raw message rows, `.head()` previews, rendered data tables | Republishes user content verbatim                              |
+| Confusion-matrix breakdowns listing individual messages    | Republishes the text _and_ attaches a public verdict to it     |
+| Word and n-gram frequency listings                         | These are user vocabulary, including slurs                     |
+| Charts plotting top words or top usernames as labels       | Same content, rendered as pixels                               |
+| Gambling site names                                        | Promotional material for illegal services                      |
+| YouTube handles                                            | Personal data, and no analytical value for text classification |
+| Styled-Unicode sequences                                   | Filter-evasion glyphs used by spammers                         |
+| Local filesystem paths in warning traces                   | Leaks the author's machine layout                              |
 
 What remains: dataset sizes, label distributions, classification reports, confusion matrix figures, training logs, and the full source code of every step.
 
@@ -83,19 +83,19 @@ Gambling promotion is rare in any single stream, so the corpus combines scraped 
 
 Data is split **by YouTube channel**, not randomly. Random splitting would leak channel-specific vocabulary and spammer templates across folds and inflate results; splitting by channel measures what actually matters — cross-channel robustness on unseen communities.
 
-| Split | Source / Channel | Stream Date | Labeling |
-| :-- | :-- | :-- | :-- |
-| **Train** | JMTV | Apr 29, 2024 | `gpt-5.4-mini` |
-| | Niceguymo | Feb 27, 2026 | `gpt-5.4-mini` |
-| | Kobo Kanaeru | Apr 1, 2022 | `gpt-5.4-mini` |
-| | KPU Provinsi Jawa Barat | Nov 11, 2024 | Pilgub debate chat, `gpt-5.4-mini` |
-| | Windah Basudara | Mar 2, 2026 | `gpt-5.4-mini` |
-| | Kaggle: `yaemico/judionline` | — | 18 channels, 32 videos |
-| | Kaggle: `yaemico/deteksi-judi-online` | — | Tribun Jogja Wayang Night |
-| **Validation** | Tribun Jogja Official | Feb 28, 2025 | **Manual** |
-| | Marsha Ozawa | Mar 19, 2023 | **Manual** |
-| | DSS Music | Sep 17, 2021 & May 11, 2025 | **Manual** |
-| **Test** | Gadgetin | Apr 17, 2024 | **Manual** |
+| Split          | Source / Channel                      | Stream Date                 | Labeling                           |
+| :------------- | :------------------------------------ | :-------------------------- | :--------------------------------- |
+| **Train**      | JMTV                                  | Apr 29, 2024                | `gpt-5.4-mini`                     |
+|                | Niceguymo                             | Feb 27, 2026                | `gpt-5.4-mini`                     |
+|                | Kobo Kanaeru                          | Apr 1, 2022                 | `gpt-5.4-mini`                     |
+|                | KPU Provinsi Jawa Barat               | Nov 11, 2024                | Pilgub debate chat, `gpt-5.4-mini` |
+|                | Windah Basudara                       | Mar 2, 2026                 | `gpt-5.4-mini`                     |
+|                | Kaggle: `yaemico/judionline`          | —                           | 18 channels, 32 videos             |
+|                | Kaggle: `yaemico/deteksi-judi-online` | —                           | Tribun Jogja Wayang Night          |
+| **Validation** | Tribun Jogja Official                 | Feb 28, 2025                | **Manual**                         |
+|                | Marsha Ozawa                          | Mar 19, 2023                | **Manual**                         |
+|                | DSS Music                             | Sep 17, 2021 & May 11, 2025 | **Manual**                         |
+| **Test**       | Gadgetin                              | Apr 17, 2024                | **Manual**                         |
 
 **Labeling** — training labels are LLM-synthesized (silver standard); validation and test sets are 100% human-annotated, so the reported metrics are not measuring agreement with the labeling model.
 
@@ -105,21 +105,21 @@ Data is split **by YouTube channel**, not randomly. Random splitting would leak 
 
 ### Toxicity — best: IndoBERTweet + slang normalization
 
-| Class | Precision | Recall | F1 | Support |
-| :-- | :-: | :-: | :-: | :-: |
-| Normal | 0.99 | 1.00 | 0.99 | 9296 |
-| Toxic | 0.81 | 0.69 | 0.74 | 280 |
-| **Accuracy** | | | **0.99** | 9576 |
-| Macro avg | 0.90 | 0.84 | 0.87 | 9576 |
+| Class        | Precision | Recall |    F1    | Support |
+| :----------- | :-------: | :----: | :------: | :-----: |
+| Normal       |   0.99    |  1.00  |   0.99   |  9296   |
+| Toxic        |   0.81    |  0.69  |   0.74   |   280   |
+| **Accuracy** |           |        | **0.99** |  9576   |
+| Macro avg    |   0.90    |  0.84  |   0.87   |  9576   |
 
 ### Gambling promotion — best: IndoBERT + slang normalization + typo correction
 
-| Class | Precision | Recall | F1 | Support |
-| :-- | :-: | :-: | :-: | :-: |
-| Normal | 0.99 | 1.00 | 0.99 | 9481 |
-| Gambling | 0.36 | 0.26 | 0.30 | 95 |
-| **Accuracy** | | | **0.99** | 9576 |
-| Macro avg | 0.68 | 0.63 | 0.65 | 9576 |
+| Class        | Precision | Recall |    F1    | Support |
+| :----------- | :-------: | :----: | :------: | :-----: |
+| Normal       |   0.99    |  1.00  |   0.99   |  9481   |
+| Gambling     |   0.36    |  0.26  |   0.30   |   95    |
+| **Accuracy** |           |        | **0.99** |  9576   |
+| Macro avg    |   0.68    |  0.63  |   0.65   |  9576   |
 
 The 0.99 accuracy figures are an artifact of class imbalance and should be ignored. The macro F1 and the minority-class rows are the real results.
 
@@ -137,15 +137,15 @@ The 0.99 accuracy figures are an artifact of class imbalance and should be ignor
 
 ## 📁 Repository Layout
 
-| Path | Contents |
-| :-- | :-- |
-| `scraping/` | YouTube live chat collection via `chat_downloader` |
-| `eda/` | Exploratory analysis across source datasets |
-| `generate_label/` | LLM labeling pipeline and train/val/test construction |
-| `preprocessing/` | Preprocessing variants, one notebook per configuration |
-| `model/` | IndoBERT, IndoBERTweet, and shallow learning experiments |
-| `dashboard/` | Next.js frontend + FastAPI inference service |
-| `resources/` | Stopword list (other lexicons are regenerated, see above) |
+| Path              | Contents                                                  |
+| :---------------- | :-------------------------------------------------------- |
+| `scraping/`       | YouTube live chat collection via `chat_downloader`        |
+| `eda/`            | Exploratory analysis across source datasets               |
+| `generate_label/` | LLM labeling pipeline and train/val/test construction     |
+| `preprocessing/`  | Preprocessing variants, one notebook per configuration    |
+| `model/`          | IndoBERT, IndoBERTweet, and shallow learning experiments  |
+| `dashboard/`      | Next.js frontend + FastAPI inference service              |
+| `resources/`      | Stopword list (other lexicons are regenerated, see above) |
 
 ---
 
@@ -164,9 +164,3 @@ The Leipzig corpus is not redistributed here; download it from the link above an
 ## ⚖️ Intended Use
 
 This work is intended for content moderation research and for building protective tooling for streamers. It is not intended for, and the published artifacts do not support, promoting gambling services, profiling or targeting individual users, or automated punitive action without human review — the gambling classifier's 0.30 F1 makes it unfit for unsupervised enforcement.
-
----
-
-## 📄 License
-
-Apache License 2.0 — see [LICENSE](LICENSE).
